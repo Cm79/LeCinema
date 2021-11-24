@@ -1,8 +1,17 @@
 <template>
   <div class="movie-detail">
-    <h2>{{ movie.Title }}</h2>
-    <p>{{ movie.Year }}</p>
-    <img :src="movie.Poster" alt="Movie Poster" class="featured-img" />
+    <div class="title">
+      <h2>{{ movie.Title }} - <span class="year">{{ movie.Year }}</span></h2>
+    </div>
+    <div class="detail-wrapper">
+      <img :src="movie.Poster" alt="Movie Poster" class="featured-img" />
+      <div class="description">
+        <p>De <span>{{ movie.Director }}</span></p>
+        <p v-if="movie.Actors !== 'N/A'">Avec <span>{{ movie.Actors }}</span></p>
+        <p>Durée <span>{{ decomposeRuntime() }}</span></p>
+        <p class="movie-plot">{{ movie.Plot }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,37 +33,75 @@ export default {
         .then((data) => {
           movie.value = data;
         });
+
     });
 
-    return { movie };
+    // Décompose une durée en min vers une durée en h et min
+    const decomposeRuntime = () => {
+      let min = parseInt(movie.value.Runtime);
+      let hour = 0;
+  
+      while (min >= 60){ 
+        min -= 60;        
+        hour++;        
+      }
+      min = min < 10 ? "0" + min : min;
+      hour = hour ? hour + "h " : "";
+
+      return hour + min + "min";
+    
+    }
+
+    return { movie, decomposeRuntime };
   },
 };
 </script>
 
 <style lang="scss">
 @import "./scss/variables.scss";
+@import url('https://fonts.googleapis.com/css2?family=Eczar:wght@500&display=swap');
+
 
 .movie-detail {
   padding: 16px;
   background-image: linear-gradient($light, $dark, $darker);
+  font-family: "Eczar", serif;
 
   h2 {
-    color: $lighter;
+    color: $darker;
     font-size: 28px;
     font-weight: 600;
     margin-bottom: 16px;
+
+    span {
+      font-size: 25px;
+
+    }
   }
 
-  .featured-img {
-    display: block;
-    max-width: 200px;
-    margin-bottom: 16px;
-  }
+  .detail-wrapper {
+    display: flex;
 
-  p {
-    color: $darker;
-    font-size: 18px;
-    line-height: 1.4;
+    .description {
+      padding: 20px;
+
+
+      p {
+        color: $lighter;
+
+        span {
+          color: $darker;
+
+        }
+
+      }
+
+      .movie-plot {
+        padding-top: 20px;
+      }
+    }
+
   }
+  
 }
 </style>

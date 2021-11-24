@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import MovieDetail from '../views/MovieDetail.vue'
+import SavedMovie from '../views/SavedMovie.vue'
 
-import '@fortawesome/fontawesome-free/css/all.css'
-import '@fortawesome/fontawesome-free/js/all.js'
 
 const routes = [
   {
@@ -15,6 +14,11 @@ const routes = [
     path: '/movie/:id',
     name: 'Movie Detail',
     component: MovieDetail
+  },
+  {
+    path: '/saved',
+    name: 'Saved Movie',
+    component: SavedMovie
   }
 ]
 

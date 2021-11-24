@@ -7,41 +7,52 @@
 
     <div class="movies-list">
       <div class="movie" v-for="movie in movies" :key="movie.imdbID">
-        <!-- <router-link :to="'/movie/' + movie.imdbID" class="movie-link"> -->
-        <div class="movie-link">
-          <div class="product-image">
-            <img :src="movie.Poster" alt="Movie Poster" />
-            <div class="save">
-              <input
-                type="checkbox"
-                name="checkbox"
-                :id="movie.imdbID"
-                :value="movie.imdbID"
-                v-model="liked"
-              />
-              <label :for="movie.imdbID"><i class="fas fa-heart"></i></label>
+          <div class="movie-link">
+          <router-link :to="'/movie/' + movie.imdbID">
+            <div class="product-image">
+              <img :src="movie.Poster" alt="Poster not found"/>
             </div>
-          </div>
+          </router-link>
+
           <div class="detail">
             <p class="year">{{ movie.Year }}</p>
             <h3>{{ movie.Title }}</h3>
+            <div class="save">
+                  <input
+                  type="checkbox"
+                  name="checkbox"
+                  :id="movie.imdbID"
+                  :value="movie.imdbID"
+                  v-model="liked"
+                  @click="setLikeCookie"
+                  />
+                  <label :for="movie.imdbID">
+                    <i class="fas fa-heart"></i>
+                </label>
+                </div>
+          </div>
+
           </div>
         </div>
-        <!-- </router-link> -->
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import env from "@/env.js";
+import Cookies from 'js-cookie';
+
 
 export default {
+
+  name: 'Home',
+
   setup() {
-    const search = ref("bach");
+    const search = ref("spiderman");
     const movies = ref([]);
     const liked = ref([]);
+
 
     const SearchMovies = () => {
       if (search.value != "") {
@@ -55,11 +66,32 @@ export default {
       }
     };
 
+    
+    const setLikeCookie = () => {
+      setTimeout( () => {
+            let likedArray = JSON.parse(JSON.stringify(liked.value));
+            Cookies.set('like', JSON.stringify(likedArray));
+
+      }, 1000);
+    };
+
+    const getLikeCookie = () => {
+      let cookieValue = JSON.parse(Cookies.get('like'));
+      liked.value = (cookieValue ? cookieValue : []) ;
+    };
+
+    
+    onMounted(getLikeCookie);
+
+      
+
     return {
       search,
       movies,
       SearchMovies,
       liked,
+      getLikeCookie,
+      setLikeCookie
     };
   },
 };
@@ -68,41 +100,10 @@ export default {
 
 <style lang="scss">
 @import "./scss/variables.scss";
+@import url('https://fonts.googleapis.com/css2?family=Eczar:wght@500&display=swap');
+
 
 .home {
-  .feature-card {
-    position: relative;
-
-    .featured-img {
-      display: block;
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-
-      position: relative;
-      z-index: 0;
-    }
-
-    .detail {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.6);
-      padding: 16px;
-      z-index: 1;
-
-      h3 {
-        color: $lighter;
-        margin-bottom: 16px;
-      }
-
-      p {
-        color: $lighter;
-      }
-    }
-  }
-
   .search-box {
     display: flex;
     flex-direction: column;
@@ -139,7 +140,8 @@ export default {
         width: 100%;
         max-width: 300px;
         background-color: $lighter;
-        padding: 16px;
+        padding: 12px;
+        font-family: "Eczar", serif;
         color: $dark;
         font-size: 20px;
         text-transform: uppercase;
@@ -156,16 +158,17 @@ export default {
     }
   }
 
+
   .movies-list {
     display: flex;
     flex-wrap: wrap;
     margin: 0px 8px;
 
     .movie {
-      max-width: 19%;
-      flex: 1 1 20%;
+      width: 23.5%;
       margin: 16px 8px;
       transition: 0.2s;
+      box-sizing: border-box;
 
       &:hover {
         box-shadow: 6px 2px 6px 2px rgba(0, 0, 0, 0.7);
@@ -177,7 +180,6 @@ export default {
         user-select: none;
 
         .product-image {
-          position: relative;
           display: block;
 
           img {
@@ -187,13 +189,34 @@ export default {
             object-fit: cover;
           }
 
+
+        }
+
+        .detail {
+          background-image: linear-gradient($light, $dark, $darker);
+          padding: 16px 8px;
+          flex: 1 1 100%;
+          position: relative;
+          font-family: "Verdana", sans-serif;
+
+          .year {
+            color: $darker;
+            font-size: 14px;
+          }
+
+          h3 {
+            color: $lighter;
+            font-weight: 600;
+            font-size: 18px;
+          }
+
           .save {
             position: absolute;
             width: 70px;
             height: 70px;
             background-color: $darker;
             color: $lighter;
-            bottom: 16px;
+            top: -100px;
             right: 20px;
             text-transform: capitalize;
             border-radius: 50% 50%;
@@ -212,32 +235,21 @@ export default {
               transition: 0.2s ease-in-out;
             }
 
+            input[type="checkbox"]:hover + label {
+              color: $dark;
+              transform: scale(1.5);
+
+            }
+
             input[type="checkbox"]:checked + label {
               color: $light;
-              font-size: 37px;
-              top: 13px;
-              left: 17px;
+              transform: scale(1.2);
+
             }
-          }
         }
 
-        .detail {
-          background-image: linear-gradient($light, $dark, $darker);
-          padding: 16px 8px;
-          flex: 1 1 100%;
-
-          .year {
-            color: $darker;
-            font-size: 14px;
-          }
-
-          h3 {
-            color: $lighter;
-            font-weight: 600;
-            font-size: 18px;
-          }
-        }
       }
+    }
     }
   }
 }
