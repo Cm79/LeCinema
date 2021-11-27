@@ -7,10 +7,10 @@
 
     <div class="movies-list">
       <div class="movie" v-for="movie in movies" :key="movie.imdbID">
-          <div class="movie-link">
+        <div class="movie-link">
           <router-link :to="'/movie/' + movie.imdbID">
             <div class="product-image">
-              <img :src="movie.Poster" alt="Poster not found"/>
+              <img :src="movie.Poster" alt="Poster not found" />
             </div>
           </router-link>
 
@@ -18,41 +18,37 @@
             <p class="year">{{ movie.Year }}</p>
             <h3>{{ movie.Title }}</h3>
             <div class="save">
-                  <input
-                  type="checkbox"
-                  name="checkbox"
-                  :id="movie.imdbID"
-                  :value="movie.imdbID"
-                  v-model="liked"
-                  @click="setLikeCookie"
-                  />
-                  <label :for="movie.imdbID">
-                    <i class="fas fa-heart"></i>
-                </label>
-                </div>
-          </div>
-
+              <input
+                type="checkbox"
+                name="checkbox"
+                :id="movie.imdbID"
+                :value="movie.imdbID"
+                v-model="liked"
+                @click="setLikeCookie"
+              />
+              <label :for="movie.imdbID">
+                <i class="fas fa-heart"></i>
+              </label>
+            </div>
           </div>
         </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import env from "@/env.js";
-import Cookies from 'js-cookie';
-
+import Cookies from "js-cookie";
 
 export default {
-
-  name: 'Home',
+  name: "Home",
 
   setup() {
     const search = ref("spiderman");
     const movies = ref([]);
     const liked = ref([]);
-
 
     const SearchMovies = () => {
       if (search.value != "") {
@@ -66,24 +62,23 @@ export default {
       }
     };
 
-    
     const setLikeCookie = () => {
-      setTimeout( () => {
-            let likedArray = JSON.parse(JSON.stringify(liked.value));
-            Cookies.set('like', JSON.stringify(likedArray));
-
+      setTimeout(() => {
+        let likedArray = JSON.parse(JSON.stringify(liked.value));
+        Cookies.set("like", JSON.stringify(likedArray));
       }, 1000);
     };
 
     const getLikeCookie = () => {
-      let cookieValue = JSON.parse(Cookies.get('like'));
-      liked.value = (cookieValue ? cookieValue : []) ;
+      if (Cookies.get("like")) {
+        let cookieValue = JSON.parse(Cookies.get("like"));
+        liked.value = cookieValue;
+      } else {
+        liked.value = [];
+      }
     };
 
-    
-    onMounted(getLikeCookie);
-
-      
+    getLikeCookie();
 
     return {
       search,
@@ -91,7 +86,7 @@ export default {
       SearchMovies,
       liked,
       getLikeCookie,
-      setLikeCookie
+      setLikeCookie,
     };
   },
 };
@@ -100,8 +95,7 @@ export default {
 
 <style lang="scss">
 @import "./scss/variables.scss";
-@import url('https://fonts.googleapis.com/css2?family=Eczar:wght@500&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Eczar:wght@500&display=swap");
 
 .home {
   .search-box {
@@ -158,7 +152,6 @@ export default {
     }
   }
 
-
   .movies-list {
     display: flex;
     flex-wrap: wrap;
@@ -188,8 +181,6 @@ export default {
             height: 500px;
             object-fit: cover;
           }
-
-
         }
 
         .detail {
@@ -238,18 +229,19 @@ export default {
             input[type="checkbox"]:hover + label {
               color: $dark;
               transform: scale(1.5);
-
             }
 
             input[type="checkbox"]:checked + label {
               color: $light;
               transform: scale(1.2);
-
             }
-        }
 
+            input[type="checkbox"]:checked:hover + label {
+              transform: scale(1.5);
+            }
+          }
+        }
       }
-    }
     }
   }
 }
