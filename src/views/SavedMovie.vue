@@ -1,4 +1,7 @@
 <template>
+  <div class="if-empty" v-show="moviesContent.length === 0">
+    <p>Vide pour le moment</p>
+  </div>
   <div class="movie-item" v-for="movie in moviesContent" :key="movie.imdbID">
     <div class="movie-info">
       <router-link :to="'/movie/' + movie.imdbID">
@@ -32,7 +35,8 @@ export default {
   setup() {
     let movie = ref({});
     let liked = ref([]);
-    const moviesContent = ref([]);
+    let moviesContent = ref([]);
+
 
     const getLikeCookie = () => {
       if (Cookies.get("like")) {
@@ -43,23 +47,12 @@ export default {
       }
     };
 
-    const updateList = () => {
-      for (let id of liked.value) {
-        console.log(id);
-        for (let i = 0; i < moviesContent.value.length; i++) {
-          if (id === moviesContent.value[i].imdbID) {
-            console.log(id);
-          }
-        }
-      }
-    };
 
     const setLikeCookie = () => {
       setTimeout(() => {
-        updateList();
         let likedArray = JSON.parse(JSON.stringify(liked.value));
         Cookies.set("like", JSON.stringify(likedArray));
-      }, 1000);
+      }, 700);
     };
 
     onBeforeMount(() => {
@@ -83,7 +76,6 @@ export default {
       setLikeCookie,
       moviesContent,
       movie,
-      updateList,
     };
   },
 };
@@ -93,6 +85,13 @@ export default {
 @import "./scss/variables.scss";
 @import url("https://fonts.googleapis.com/css2?family=Eczar:wght@500&display=swap");
 
+.if-empty {
+  color: $darker;
+  font-family: "Eczar", serif;
+  margin: 30px;
+
+
+}
 .movie-item {
   background-image: linear-gradient($light, $dark, $darker);
   margin: 10px;

@@ -46,21 +46,39 @@ export default {
   name: "Home",
 
   setup() {
-    const search = ref("spiderman");
+    const search = ref("");
     const movies = ref([]);
     const liked = ref([]);
+    const moviePage = ref([]);
 
     const SearchMovies = () => {
+      movies.value.splice(0);
       if (search.value != "") {
+
+        for (let i = 1; i < 11; i++) {
+
         fetch(
-          `http://www.omdbapi.com/?apikey=${env.apikey}&s=${search.value}&type=movie`
+          `http://www.omdbapi.com/?apikey=${env.apikey}&s=${search.value}&type=movie&page=${i}`
         )
           .then((response) => response.json())
           .then((data) => {
-            movies.value = data.Search;
-          });
+            moviePage.value = data.Search;
+            if (moviePage.value) {
+ 
+            for ( let it = 0; it < moviePage.value.length; it++){
+              if (moviePage.value[it].Poster != "N/A"){
+                      movies.value.push(moviePage.value[it]);        
+              }
+             }
+          }
+          else {
+            i = 11;
+          }
+        });
       }
-    };
+    }
+
+    }
 
     const setLikeCookie = () => {
       setTimeout(() => {
@@ -156,12 +174,13 @@ export default {
     display: flex;
     flex-wrap: wrap;
     margin: 0px 8px;
+    justify-content: center;
 
     .movie {
-      width: 23.5%;
+      width: 300px;
       margin: 16px 8px;
       transition: 0.2s;
-      box-sizing: border-box;
+
 
       &:hover {
         box-shadow: 6px 2px 6px 2px rgba(0, 0, 0, 0.7);
@@ -207,6 +226,7 @@ export default {
             height: 70px;
             background-color: $darker;
             color: $lighter;
+            opacity: 0.9;
             top: -100px;
             right: 20px;
             text-transform: capitalize;
