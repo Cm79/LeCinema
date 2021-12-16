@@ -1,6 +1,6 @@
 <template>
   <div class="if-empty" v-show="moviesContent.length === 0">
-    <p>Vide pour le moment</p>
+    <p>Vide pour le moment ...</p>
   </div>
   <div class="movie-item" v-for="movie in moviesContent" :key="movie.imdbID">
     <div class="movie-info">
