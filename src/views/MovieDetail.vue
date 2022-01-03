@@ -1,8 +1,8 @@
 <template>
-  <div class="movie-detail">
+  <div class="container">
     <div class="title">
-      <h2>{{ movie.Title }} - <span class="year">{{ movie.Year }}</span></h2>
-        <div class="save">
+      <h2>{{ movie.Title }} - {{ movie.Year }}</h2>
+      <div class="save">
         <input
           type="checkbox"
           name="checkbox"
@@ -16,7 +16,7 @@
         </label>
       </div>
     </div>
-    <div class="detail-wrapper">
+    <div class="detail">
       <img :src="movie.Poster" alt="Movie Poster" class="featured-img" />
       <div class="description">
         <p>De <span>{{ movie.Director }}</span></p>
@@ -44,7 +44,7 @@ export default {
     onBeforeMount(() => {
       getLikeCookie();
       fetch(
-        `http://www.omdbapi.com/?apikey=${env.apikey}&i=${route.params.id}&plot=full`
+        `https://www.omdbapi.com/?apikey=${env.apikey}&i=${route.params.id}&plot=full`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -98,40 +98,34 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Eczar:wght@500&display=swap');
 
 
-.movie-detail {
-  padding: 16px;
-  background-image: linear-gradient($light, $dark, $darker);
-  font-family: "Eczar", serif;
+.container {
+  margin: 30px 0;
 
   .title { 
     position: relative;
+    @include md {
     display: flex;
     flex-direction: column;
-
+    }
 
   h2 {
     color: $darker;
     font-size: 28px;
     font-weight: 600;
     padding-bottom: 16px;
-
-    span {
-      font-size: 25px;
-
-    }
   }
 
        .save {
+          @include md {
             position: absolute;
+            top: 0;
+            right: 30px;
+          }            
             width: 60px;
             height: 60px;
             background-color: $darker;
-            color: $lighter;
-            opacity: 0.9;
-            top: 0;
-            right: 30px;
-            text-transform: capitalize;
             border-radius: 50% 50%;
+            position: relative;
 
             input[type="checkbox"] {
               display: none;
@@ -148,7 +142,7 @@ export default {
             }
 
             input[type="checkbox"]:hover + label {
-              color: $dark;
+              color: $light;
               transform: scale(1.5);
             }
 
@@ -163,9 +157,11 @@ export default {
           }
   }
 
-  .detail-wrapper {
+  .detail {
     display: flex;
     flex-direction: column;
+    letter-spacing: 0.5px;
+    margin-top: 15px;
 
 // min-width: small tablets (768px)
     @include md {
@@ -177,20 +173,15 @@ export default {
 
 
       p {
-        color: $lighter;
-
+        color: $dark;
+        
         span {
-          color: $lighter;
-
-          // min-width: small tablets (768px)
-          @include md {
-          color: $darker;
-    }
+          color: $black;
         }
-
       }
 
       .movie-plot {
+        color: $black;        
         padding-top: 20px;
       }
     }
