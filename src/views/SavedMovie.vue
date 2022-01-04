@@ -97,6 +97,7 @@ export default {
     background: linear-gradient(90deg, rgba(24,183,190,1) 0%, rgba(23,140,164,1) 70%, rgba(7,42,64,1) 100%);    max-width: 600px;
     display: flex;
     justify-content: space-between;
+    border-radius: 5px;
     padding: 10px;
     font-family: "Eczar", serif;
     margin: 15px 0;

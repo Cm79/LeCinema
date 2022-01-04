@@ -43,6 +43,7 @@
               </div>
         </div>
     </div>
+    <button v-if="movies.length" @click="scrollBackUp()" class="scroll-back-up"><i class="fas fa-arrow-circle-up"></i></button>
   </div>
 </template>
 
@@ -133,6 +134,13 @@ export default {
       getLikeCookie();
     })
 
+    const scrollBackUp = () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+});    }
+
 
     return {
       search,
@@ -144,7 +152,7 @@ export default {
       getNewMovies,
       newMoviesFull,
       getMonthYear,
-      
+      scrollBackUp
 
     };
   },
@@ -158,9 +166,22 @@ export default {
 
 .home {
   margin: 0;
+  position: relative;
+
+  .scroll-back-up {
+    position: fixed;
+    right: 30px;
+    font-size: 50px;
+    bottom: 30px;
+    color: $darker;
+    border-radius: 50% 50%;
+    border: none;
+    cursor: pointer;
+
+  }
 
   @include sm {
-    margin: 30px 0;
+    margin: 30px 0 0;
   }
   .main {
     display: flex;
@@ -256,7 +277,7 @@ export default {
         height: 100%;
         width: 150px;
         margin: 0 10px;
-        border-radius: 10px;
+        border-radius: 5px;
         transition: ease .4s;
         background-position: center top;
         position: relative;
@@ -270,7 +291,7 @@ export default {
           position: absolute;
           inset: 0;
           background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);          
-          border-radius: 10px;
+          border-radius: 5px;
         }
 
         p {
@@ -325,7 +346,7 @@ export default {
             display: block;
             width: 100%;
             height: 500px;
-            border-radius: 10px;
+            border-radius: 5px;
             background-size: cover;
             position: relative;
             color: $lighter;
@@ -336,7 +357,7 @@ export default {
               position: absolute;
               inset: 0;
               background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 50%);          
-              border-radius: 10px;
+              border-radius: 5px;
         }
 
           .year {
